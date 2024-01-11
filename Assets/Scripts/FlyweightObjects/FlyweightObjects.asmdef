@@ -1,0 +1,17 @@
+{
+    "name": "FlyweightObjects",
+    "rootNamespace": "BestGameEver",
+    "references": [
+        "GUID:793324d9d74cd6248940d4c38dffaeb7",
+        "GUID:ebe2823f492c53a4b83e4adcf20bc1a9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
