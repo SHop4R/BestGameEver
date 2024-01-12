@@ -9,11 +9,13 @@ namespace BestGameEver.Factory
     public class FlyweightFactory : MonoSingleton<FlyweightFactory>
     {
         [SerializeField] private FlyweightSo[] flyweightObjects = { };
-
+        
         private readonly Dictionary<FlyweightObjectType, FlyweightPoolTuple> _flyweightPoolsDictionary = new();
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            
             foreach (FlyweightSo so in flyweightObjects)
             {
                 FlyweightPoolTuple tuple = new(so, CreatePoolFor(so));
@@ -37,11 +39,11 @@ namespace BestGameEver.Factory
         
         private IObjectPool<Flyweight> GetPoolFor(FlyweightSo so)
         {
-            if (_flyweightPoolsDictionary.TryGetValue(so.type, out FlyweightPoolTuple tuple)) return tuple.Pool;
+            if (_flyweightPoolsDictionary.TryGetValue(so.type, out FlyweightPoolTuple existingTuple)) return existingTuple.Pool;
 
-            FlyweightPoolTuple newTuple = new(so, CreatePoolFor(so));
-            _flyweightPoolsDictionary.Add(so.type, newTuple);
-            return newTuple.Pool;
+            FlyweightPoolTuple createdTuple = new(so, CreatePoolFor(so));
+            _flyweightPoolsDictionary.Add(so.type, createdTuple);
+            return createdTuple.Pool;
         }
 
         private static IObjectPool<Flyweight> CreatePoolFor(FlyweightSo so)

@@ -2,8 +2,10 @@
 
 namespace BestGameEver.Enemies.EnemyStates
 {
-    public class EnemyAliveState : EnemyState
+    public class EnemyAliveState : BaseEnemyState
     {
+        private Vector3 _destination;
+        
         public override void TakeDamage(Enemy enemy, float damage)
         {
             enemy.health -= damage;
@@ -24,10 +26,12 @@ namespace BestGameEver.Enemies.EnemyStates
 
         public override void Patrol(Enemy enemy, Vector3 position)
         {
-            if (enemy.Agent.pathPending) return;
-            if (enemy.Agent.remainingDistance >= enemy.Agent.stoppingDistance) return;
+            if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)
+            {
+                _destination = Enemy.RandomNavMeshPosition(position, enemy.patrolRadius);
+            }
             
-            enemy.Agent.SetDestination(Enemy.RandomNavMeshPosition(position, enemy.patrolRadius));
+            enemy.Agent.SetDestination(_destination);
         }
 
         private static void Injure(Enemy enemy)
@@ -38,6 +42,8 @@ namespace BestGameEver.Enemies.EnemyStates
             enemy.Agent.isStopped = true;
             
             ChangeState(enemy, new EnemyInjuredState());
+
+            enemy.EnemyCollider.sharedMesh = enemy.InjuredMesh;
         }
     }
 }

@@ -4,28 +4,17 @@ namespace BestGameEver.Core
 {
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
-        private static T _instance;
+        public static T Instance { get; private set; }
 
-        public static T Instance => GetInstance();
-
-        private static T GetInstance()
+        protected virtual void Awake()
         {
-            if (_instance != null) return _instance;
-
-            T[] allInstances = FindObjectsOfType<T>();
-            foreach (T obj in allInstances)
+            if (Instance != null && Instance != this)
             {
-                if (_instance == null)
-                {
-                    _instance = obj;
-                    continue;
-                }
-
-                Destroy(obj.gameObject);
+                Destroy(gameObject);
+                return;
             }
-        
-            _instance ??= new GameObject(typeof(T).Name).AddComponent<T>();
-            return _instance;
+
+            Instance = this as T;
         }
     }
 }

@@ -10,15 +10,6 @@ namespace BestGameEver.FirstPersonController
         [Header("Fire Rate")]
         [SerializeField] private float fireRate;
         private float _lastFireRate;
-
-        private FlyweightFactory _factory;
-        
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            _factory = FlyweightFactory.Instance;
-        }
         
         protected override void Update()
         {
@@ -26,14 +17,14 @@ namespace BestGameEver.FirstPersonController
 
             if (StarterInputs.fireLeft)
             {
-                SpawnProjectile(FlyweightObjectType.DamageProjectile);
                 StarterInputs.fireLeft = false;
+                SpawnProjectile(FlyweightObjectType.DamageProjectile);
             }
             
             if (StarterInputs.fireRight)
             {
-                SpawnProjectile(FlyweightObjectType.HealProjectile);
                 StarterInputs.fireRight = false;
+                SpawnProjectile(FlyweightObjectType.HealProjectile);
             }
         }
         
@@ -41,7 +32,7 @@ namespace BestGameEver.FirstPersonController
         {
             if (Time.time - _lastFireRate < fireRate) return;
             
-            Flyweight obj = _factory.Spawn(type);
+            Flyweight obj = FlyweightFactory.Instance.Spawn(type);
             if (!obj.TryGetComponent(out Transform objectTransform)) return;
             
             objectTransform.position = cinemachineCameraTarget.position;

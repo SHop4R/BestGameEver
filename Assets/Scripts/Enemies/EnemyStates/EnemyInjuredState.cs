@@ -2,10 +2,11 @@
 
 namespace BestGameEver.Enemies.EnemyStates
 {
-    public class EnemyInjuredState : EnemyState
+    public class EnemyInjuredState : BaseEnemyState
     {
         public override void TakeDamage(Enemy enemy, float damage)
         {
+            enemy.enemyEvent.RaiseEvent(enemy);
             Object.Destroy(enemy.gameObject);
         }
 
@@ -27,6 +28,8 @@ namespace BestGameEver.Enemies.EnemyStates
             enemy.health = 10;
             
             ChangeState(enemy, new EnemyAliveState());
+
+            enemy.EnemyCollider.sharedMesh = enemy.AliveMesh;
         }
     }
 }

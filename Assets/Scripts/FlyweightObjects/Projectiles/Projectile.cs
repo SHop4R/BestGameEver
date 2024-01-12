@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace BestGameEver.FlyweightObjects.Projectiles
 {
-    [RequireComponent(typeof(Collider)), RequireComponent(typeof(Rigidbody)), DisallowMultipleComponent]
+    [RequireComponent(typeof(Collider)), DisallowMultipleComponent]
     public sealed class Projectile : Flyweight
     {
         private ProjectileSo SettingsForProjectile => (ProjectileSo)settings;
@@ -39,11 +39,28 @@ namespace BestGameEver.FlyweightObjects.Projectiles
             FlyweightFactory.Instance.ReturnToPool(this);
         }
 
-        private void OnCollisionEnter(Collision other)
+        private void OnTriggerEnter(Collider other)
         {
-            if (!other.gameObject.CompareTag("Enemy")) return;
-            if (!other.gameObject.TryGetComponent(out Enemy enemy)) return;
+            switch (other.tag)
+            {
+                case "Player":
+                    break;
+                
+                case "Enemy":
+                    if (!other.TryGetComponent(out Enemy enemy)) return;
+                    Affect(enemy);
+                    break;
+                
+                default:
+                    FlyweightFactory.Instance.ReturnToPool(this);
+                    break;
+            }
+        }
 
+        private void Affect(Enemy enemy)
+        {
+            FlyweightFactory.Instance.ReturnToPool(this);
+            
             switch (SettingsForProjectile.type)
             {
                 case FlyweightObjectType.DamageProjectile:

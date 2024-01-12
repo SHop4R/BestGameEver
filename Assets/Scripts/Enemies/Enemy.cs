@@ -1,8 +1,6 @@
-using System;
 using BestGameEver.Enemies.EnemyStates;
 using UnityEngine;
 using UnityEngine.AI;
-using Random = UnityEngine.Random;
 
 namespace BestGameEver.Enemies
 {
@@ -10,7 +8,8 @@ namespace BestGameEver.Enemies
     public sealed class Enemy : MonoBehaviour
     {
         internal NavMeshAgent Agent;
-        internal EnemyState CurrentState;
+        internal BaseEnemyState CurrentState;
+        internal MeshCollider EnemyCollider;
 
         [Header("Enemy Settings")]
         [SerializeField] internal float health;
@@ -19,37 +18,39 @@ namespace BestGameEver.Enemies
         
         [Header("Patrol Settings")]
         [SerializeField] internal float patrolRadius;
+
+        [Header("Events")]
+        [SerializeField] internal EnemyEvent enemyEvent;
         
         private Transform _enemyTransform;
+
+        internal Mesh AliveMesh;
+        internal Mesh InjuredMesh;
 
         private void Awake()
         {
             CurrentState = new EnemyAliveState();
+            EnemyCollider = GetComponent<MeshCollider>();
             Agent = GetComponent<NavMeshAgent>();
             _enemyTransform = transform;
             
             aliveObject.SetActive(true);
             injuredObject.SetActive(false);
+            
+            AliveMesh = aliveObject.GetComponent<MeshFilter>().sharedMesh;
+            InjuredMesh = injuredObject.GetComponent<MeshFilter>().sharedMesh;
+            
+            EnemyCollider.sharedMesh = AliveMesh;
         }
 
         private void Start()
         {
-            InvokeRepeating(nameof(Patrol), 0f, 0.5f);
-        }
-
-        internal static Vector3 RandomNavMeshPosition(Vector3 position, float distance)
-        {
-            Vector3 randomDirection = Random.insideUnitSphere * distance;
-            randomDirection += position;
-            
-            NavMesh.SamplePosition(randomDirection, out NavMeshHit navHit, distance, NavMesh.AllAreas);
-            return navHit.position;
+            InvokeRepeating(nameof(Patrol), 0f, 3f);
         }
 
         public void TakeDamage(float damage)
         {
             CurrentState.TakeDamage(this, damage);
-            Debug.Log($"Enemy took {damage} damage");
         }
         
         public void Heal(float heal)
@@ -60,6 +61,15 @@ namespace BestGameEver.Enemies
         private void Patrol()
         {
             CurrentState.Patrol(this, _enemyTransform.position);
+        }
+
+        internal static Vector3 RandomNavMeshPosition(Vector3 position, float distance)
+        {
+            Vector3 randomDirection = Random.insideUnitCircle * distance;
+            randomDirection += position;
+            
+            NavMesh.SamplePosition(randomDirection, out NavMeshHit navHit, 10f, NavMesh.AllAreas);
+            return navHit.position;
         }
     }
 }

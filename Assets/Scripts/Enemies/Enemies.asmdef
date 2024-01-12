@@ -1,7 +1,9 @@
 {
     "name": "Enemies",
     "rootNamespace": "BestGameEver",
-    "references": [],
+    "references": [
+        "GUID:793324d9d74cd6248940d4c38dffaeb7"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -9,11 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 594d02ef92404d2789be5552a837462c, type: 3}
-  m_Name: DamageOrb
+  m_Script: {fileID: 11500000, guid: 8c1850f9260941f0ac02ad2a9fa25d6c, type: 3}
+  m_Name: EnemyEvent
   m_EditorClassIdentifier: 
-  type: 0
-  prefab: {fileID: 1870416265034142936, guid: dd6a06142cd2cb54cb8d011ffd13c9e7, type: 3}
-  speed: 35
-  effectAmount: 60
-  lifetime: 2
