@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using BestGameEver.Core;
 using BestGameEver.Enemies;
 using BestGameEver.Factory;
 using BestGameEver.FlyweightObjects.Base;
@@ -8,14 +7,19 @@ using UnityEngine;
 
 namespace BestGameEver.FlyweightObjects.Projectiles
 {
-    [RequireComponent(typeof(Collider)), DisallowMultipleComponent]
+    [DisallowMultipleComponent]
     public sealed class Projectile : Flyweight
     {
         private ProjectileSo SettingsForProjectile => (ProjectileSo)settings;
-
+        
+        [SerializeField] private LayerMask layers;
+        
+        private float _radius;
+        private readonly Collider[] _results = { null };
+        
         private void Awake()
         {
-            GetComponent<Collider>().isTrigger = true;
+            _radius = transform.localScale.x / 2;
         }
 
         private void OnEnable()
@@ -25,7 +29,8 @@ namespace BestGameEver.FlyweightObjects.Projectiles
         
         private void Update()
         {
-            transform.Translate(Vector3.forward * (SettingsForProjectile.speed * Time.deltaTime));
+            transform.Translate(Vector3.forward * (SettingsForProjectile.Speed * Time.deltaTime));
+            CheckForCollision();
         }
         
         private void OnDisable()
@@ -35,19 +40,23 @@ namespace BestGameEver.FlyweightObjects.Projectiles
 
         private IEnumerator Lifetime()
         {
-            yield return WaitForSecondsStorage.GenerateWaitForSeconds(SettingsForProjectile.lifetime);
+            yield return WaitForSecondsHelper.GetWaitForSeconds(SettingsForProjectile.Lifetime);
             FlyweightFactory.Instance.ReturnToPool(this);
         }
-
-        private void OnTriggerEnter(Collider other)
+        
+        private void CheckForCollision()
         {
-            switch (other.tag)
+            int numberOfCollidersChecked = Physics.OverlapSphereNonAlloc(transform.position, _radius, _results, layers);
+
+            if (numberOfCollidersChecked == 0) return;
+
+            switch (_results[0].tag)
             {
                 case "Player":
                     break;
                 
                 case "Enemy":
-                    if (!other.TryGetComponent(out Enemy enemy)) return;
+                    if (!_results[0].TryGetComponent(out Enemy enemy)) return;
                     Affect(enemy);
                     break;
                 
@@ -56,19 +65,19 @@ namespace BestGameEver.FlyweightObjects.Projectiles
                     break;
             }
         }
-
+        
         private void Affect(Enemy enemy)
         {
             FlyweightFactory.Instance.ReturnToPool(this);
             
-            switch (SettingsForProjectile.type)
+            switch (SettingsForProjectile.Type)
             {
                 case FlyweightObjectType.DamageProjectile:
-                    enemy.TakeDamage(SettingsForProjectile.effectAmount);
+                    enemy.TakeDamage(SettingsForProjectile.EffectAmount);
                     break;
 
                 case FlyweightObjectType.HealProjectile:
-                    enemy.Heal(SettingsForProjectile.effectAmount);
+                    enemy.Heal(SettingsForProjectile.EffectAmount);
                     break;
 
                 default:

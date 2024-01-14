@@ -4,12 +4,12 @@ namespace BestGameEver.FlyweightObjects.Base
 {
     public abstract class FlyweightSo : ScriptableObject
     {
-        public FlyweightObjectType type;
-        public GameObject prefab;
+        [field: SerializeField] public FlyweightObjectType Type{ get; private set; }
+        [field: SerializeField] public GameObject Prefab{ get; private set; }
         
         public virtual Flyweight CreateProjectile()
         {
-            GameObject obj = Instantiate(prefab);
+            GameObject obj = Instantiate(Prefab);
             obj.SetActive(false);
 
             obj.TryGetComponent(out Flyweight flyweight);
@@ -18,10 +18,10 @@ namespace BestGameEver.FlyweightObjects.Base
             return flyweight;
         }
         
-        public virtual void OnGetProjectile(Flyweight projectile) => projectile.gameObject.SetActive(true);
+        public static void OnGetProjectile(Flyweight projectile) => projectile.gameObject.SetActive(true);
         
-        public virtual void OnReleaseProjectile(Flyweight projectile) => projectile.gameObject.SetActive(false);
+        public static void OnReleaseProjectile(Flyweight projectile) => projectile.gameObject.SetActive(false);
         
-        public virtual void DestroyProjectile(Flyweight projectile) => Destroy(projectile.gameObject);
+        public static void DestroyProjectile(Flyweight projectile) => Destroy(projectile.gameObject);
     }
 }

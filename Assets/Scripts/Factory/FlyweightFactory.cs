@@ -8,7 +8,7 @@ namespace BestGameEver.Factory
 {
     public class FlyweightFactory : MonoSingleton<FlyweightFactory>
     {
-        [SerializeField] private FlyweightSo[] flyweightObjects = { };
+        [SerializeField] private FlyweightSo[] flyweightObjects;
         
         private readonly Dictionary<FlyweightObjectType, FlyweightPoolTuple> _flyweightPoolsDictionary = new();
 
@@ -19,7 +19,7 @@ namespace BestGameEver.Factory
             foreach (FlyweightSo so in flyweightObjects)
             {
                 FlyweightPoolTuple tuple = new(so, CreatePoolFor(so));
-                _flyweightPoolsDictionary.Add(so.type, tuple);
+                _flyweightPoolsDictionary.Add(so.Type, tuple);
             }
             
             flyweightObjects = null;
@@ -39,21 +39,20 @@ namespace BestGameEver.Factory
         
         private IObjectPool<Flyweight> GetPoolFor(FlyweightSo so)
         {
-            if (_flyweightPoolsDictionary.TryGetValue(so.type, out FlyweightPoolTuple existingTuple)) return existingTuple.Pool;
+            if (_flyweightPoolsDictionary.TryGetValue(so.Type, out FlyweightPoolTuple existingTuple)) return existingTuple.Pool;
 
             FlyweightPoolTuple createdTuple = new(so, CreatePoolFor(so));
-            _flyweightPoolsDictionary.Add(so.type, createdTuple);
+            _flyweightPoolsDictionary.Add(so.Type, createdTuple);
             return createdTuple.Pool;
         }
 
         private static IObjectPool<Flyweight> CreatePoolFor(FlyweightSo so)
         {
-            return new ObjectPool<Flyweight>
-            (
+            return new ObjectPool<Flyweight>(
                 so.CreateProjectile,
-                so.OnGetProjectile,
-                so.OnReleaseProjectile,
-                so.DestroyProjectile,
+                FlyweightSo.OnGetProjectile,
+                FlyweightSo.OnReleaseProjectile,
+                FlyweightSo.DestroyProjectile,
                 true,
                 10,
                 100

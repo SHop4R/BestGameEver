@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2506518145444135144}
   - component: {fileID: 1435840634947184642}
   - component: {fileID: 6715809052497317902}
-  - component: {fileID: 2587534498753192365}
   - component: {fileID: 1545322352168599613}
   m_Layer: 0
   m_Name: HealOrb
@@ -29,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1870416265034142936}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.42, z: 2.15}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -86,27 +85,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &2587534498753192365
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1870416265034142936}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1545322352168599613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,6 +98,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: fe1a8f7cc955f8d4bb79564657ae6823, type: 2}
+  layers:
+    serializedVersion: 2
+    m_Bits: 51
 --- !u!1 &3225008750435141767
 GameObject:
   m_ObjectHideFlags: 0

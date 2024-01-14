@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using BestGameEver.Enemies.Base;
+using UnityEngine;
 
 namespace BestGameEver.Enemies.EnemyStates
 {
-    public class EnemyInjuredState : BaseEnemyState
+    internal sealed class EnemyInjuredState : EnemyState
     {
         public override void TakeDamage(Enemy enemy, float damage)
         {
@@ -15,9 +16,7 @@ namespace BestGameEver.Enemies.EnemyStates
             Revive(enemy);
         }
 
-        public override void Patrol(Enemy enemy, Vector3 position)
-        {
-        }
+        public override void Patrol(Enemy enemy, Vector3 position) {}
         
         private static void Revive(Enemy enemy)
         {
@@ -27,7 +26,7 @@ namespace BestGameEver.Enemies.EnemyStates
             enemy.Agent.isStopped = false;
             enemy.health = 10;
             
-            ChangeState(enemy, new EnemyAliveState());
+            ChangeState(enemy, StateOfEnemy.Alive);
 
             enemy.EnemyCollider.sharedMesh = enemy.AliveMesh;
         }

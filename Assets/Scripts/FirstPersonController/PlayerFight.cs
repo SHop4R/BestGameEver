@@ -1,6 +1,7 @@
 ﻿using BestGameEver.Factory;
 using BestGameEver.FlyweightObjects.Base;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BestGameEver.FirstPersonController
 {
@@ -10,22 +11,15 @@ namespace BestGameEver.FirstPersonController
         [Header("Fire Rate")]
         [SerializeField] private float fireRate;
         private float _lastFireRate;
-        
-        protected override void Update()
-        {
-            base.Update();
 
-            if (StarterInputs.fireLeft)
-            {
-                StarterInputs.fireLeft = false;
-                SpawnProjectile(FlyweightObjectType.DamageProjectile);
-            }
-            
-            if (StarterInputs.fireRight)
-            {
-                StarterInputs.fireRight = false;
-                SpawnProjectile(FlyweightObjectType.HealProjectile);
-            }
+        public void OnFireLeft(InputValue value)
+        {
+            SpawnProjectile(FlyweightObjectType.DamageProjectile);
+        }
+        
+        public void OnFireRight(InputValue value)
+        {
+            SpawnProjectile(FlyweightObjectType.HealProjectile);
         }
         
         private void SpawnProjectile(FlyweightObjectType type)

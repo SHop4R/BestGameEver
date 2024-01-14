@@ -2,9 +2,9 @@
     "name": "Player",
     "rootNamespace": "BestGameEver",
     "references": [
-        "GUID:877e4f02f3fceb642b1fc22111982d48",
         "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:793324d9d74cd6248940d4c38dffaeb7"
+        "GUID:793324d9d74cd6248940d4c38dffaeb7",
+        "GUID:877e4f02f3fceb642b1fc22111982d48"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

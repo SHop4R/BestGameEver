@@ -1,14 +1,16 @@
+using BestGameEver.Enemies.Base;
 using BestGameEver.Enemies.EnemyStates;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 namespace BestGameEver.Enemies
 {
-    [RequireComponent(typeof(NavMeshAgent)), DisallowMultipleComponent]
+    [RequireComponent(typeof(NavMeshAgent)), DisallowMultipleComponent, SelectionBase]
     public sealed class Enemy : MonoBehaviour
     {
         internal NavMeshAgent Agent;
-        internal BaseEnemyState CurrentState;
+        internal EnemyState CurrentState;
         internal MeshCollider EnemyCollider;
 
         [Header("Enemy Settings")]
@@ -22,40 +24,59 @@ namespace BestGameEver.Enemies
         [Header("Events")]
         [SerializeField] internal EnemyEvent enemyEvent;
         
+        [Header("UI")]
+        [SerializeField] private Slider healthBar;
+        [SerializeField] private Vector3 aliveHealthBarOffset;
+        [SerializeField] private Vector3 injuredHealthBarOffset;
+        
+        private Transform _playerTransform;
         private Transform _enemyTransform;
+        private EnemyState _lastEnemyState;
 
         internal Mesh AliveMesh;
         internal Mesh InjuredMesh;
+        
+        internal Vector3 Destination;
 
         private void Awake()
         {
-            CurrentState = new EnemyAliveState();
-            EnemyCollider = GetComponent<MeshCollider>();
+            _playerTransform = FindObjectOfType<CharacterController>().transform;
             Agent = GetComponent<NavMeshAgent>();
-            _enemyTransform = transform;
-            
-            aliveObject.SetActive(true);
-            injuredObject.SetActive(false);
-            
+            EnemyCollider = GetComponent<MeshCollider>();
             AliveMesh = aliveObject.GetComponent<MeshFilter>().sharedMesh;
             InjuredMesh = injuredObject.GetComponent<MeshFilter>().sharedMesh;
             
             EnemyCollider.sharedMesh = AliveMesh;
+            
+            aliveObject.SetActive(true);
+            injuredObject.SetActive(false);
+            
+            _enemyTransform = transform;
+            
+            CurrentState = StateHelper.GetEnemyState(StateOfEnemy.Alive);
+            _lastEnemyState = CurrentState;
         }
 
         private void Start()
         {
             InvokeRepeating(nameof(Patrol), 0f, 3f);
         }
+        
+        private void LateUpdate()
+        {
+            healthBar.transform.LookAt(_playerTransform, Vector3.up);
+        }
 
         public void TakeDamage(float damage)
         {
             CurrentState.TakeDamage(this, damage);
+            HandleHealthBar();
         }
         
         public void Heal(float heal)
         {
             CurrentState.Heal(this, heal);
+            HandleHealthBar();
         }
 
         private void Patrol()
@@ -63,12 +84,27 @@ namespace BestGameEver.Enemies
             CurrentState.Patrol(this, _enemyTransform.position);
         }
 
+        private void HandleHealthBar()
+        {
+            healthBar.value = health;
+            
+            if (CurrentState == _lastEnemyState) return;
+            
+            healthBar.transform.localPosition = CurrentState switch
+            {
+                EnemyAliveState => aliveHealthBarOffset,
+                EnemyInjuredState => injuredHealthBarOffset,
+                _ => aliveHealthBarOffset
+            };
+            
+            _lastEnemyState = CurrentState;
+        }
+
         internal static Vector3 RandomNavMeshPosition(Vector3 position, float distance)
         {
-            Vector3 randomDirection = Random.insideUnitCircle * distance;
-            randomDirection += position;
+            position += Random.insideUnitSphere * distance;
             
-            NavMesh.SamplePosition(randomDirection, out NavMeshHit navHit, 10f, NavMesh.AllAreas);
+            NavMesh.SamplePosition(position, out NavMeshHit navHit, distance, NavMesh.AllAreas);
             return navHit.position;
         }
     }

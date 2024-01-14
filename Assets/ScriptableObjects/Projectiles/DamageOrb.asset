@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594d02ef92404d2789be5552a837462c, type: 3}
   m_Name: DamageOrb
   m_EditorClassIdentifier: 
-  type: 0
-  prefab: {fileID: 1870416265034142936, guid: dd6a06142cd2cb54cb8d011ffd13c9e7, type: 3}
-  speed: 35
-  effectAmount: 60
-  lifetime: 2
+  <Type>k__BackingField: 0
+  <Prefab>k__BackingField: {fileID: 1870416265034142936, guid: dd6a06142cd2cb54cb8d011ffd13c9e7, type: 3}
+  <Speed>k__BackingField: 30
+  <EffectAmount>k__BackingField: 20
+  <Lifetime>k__BackingField: 2

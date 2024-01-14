@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace BestGameEver.Core
+namespace BestGameEver.FlyweightObjects.Projectiles
 {
-    public static class WaitForSecondsStorage
+    internal static class WaitForSecondsHelper
     {
         private static readonly Dictionary<float, WaitForSeconds> Storage = new();
         
-        public static WaitForSeconds GenerateWaitForSeconds(float seconds)
+        internal static WaitForSeconds GetWaitForSeconds(float seconds)
         {
             if (Storage.TryGetValue(seconds, out WaitForSeconds waitForSeconds)) return waitForSeconds;
             
-            waitForSeconds = new WaitForSeconds(seconds);
+            waitForSeconds = new(seconds);
             Storage.Add(seconds, waitForSeconds);
             return waitForSeconds;
         }

@@ -68,7 +68,7 @@ namespace BestGameEver.FirstPersonController
 		private PlayerInput _playerInput;
 #endif
 		private CharacterController _controller;
-		protected StarterAssetsInputs StarterInputs;
+		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
 
 		private const float Threshold = 0.01f;
@@ -99,7 +99,7 @@ namespace BestGameEver.FirstPersonController
 		private void Start()
 		{
 			_controller = GetComponent<CharacterController>();
-			StarterInputs = GetComponent<StarterAssetsInputs>();
+			_input = GetComponent<StarterAssetsInputs>();
 			_playerTransform = transform;
 #if ENABLE_INPUT_SYSTEM
 			_playerInput = GetComponent<PlayerInput>();
@@ -135,13 +135,13 @@ namespace BestGameEver.FirstPersonController
 		private void CameraRotation()
 		{
 			// if there is an input
-			if (!(StarterInputs.look.sqrMagnitude >= Threshold)) return;
+			if (!(_input.look.sqrMagnitude >= Threshold)) return;
 			
 			//Don't multiply mouse input by Time.deltaTime
 			float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 				
-			_cinemachineTargetPitch += StarterInputs.look.y * rotationSpeed * deltaTimeMultiplier;
-			_rotationVelocity = StarterInputs.look.x * rotationSpeed * deltaTimeMultiplier;
+			_cinemachineTargetPitch += _input.look.y * rotationSpeed * deltaTimeMultiplier;
+			_rotationVelocity = _input.look.x * rotationSpeed * deltaTimeMultiplier;
 
 			// clamp our pitch rotation
 			_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, bottomClamp, topClamp);
@@ -156,20 +156,20 @@ namespace BestGameEver.FirstPersonController
 		private void Move()
 		{
 			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = StarterInputs.sprint ? sprintSpeed : moveSpeed;
+			float targetSpeed = _input.sprint ? sprintSpeed : moveSpeed;
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
 			// note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
 			// if there is no input, set the target speed to 0
-			if (StarterInputs.move == Vector2.zero) targetSpeed = 0.0f;
+			if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 
 			// a reference to the players current horizontal velocity
 			Vector3 velocity = _controller.velocity;
 			float currentHorizontalSpeed = new Vector3(velocity.x, 0.0f, velocity.z).magnitude;
 
 			const float speedOffset = 0.1f;
-			float inputMagnitude = StarterInputs.analogMovement ? StarterInputs.move.magnitude : 1f;
+			float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
 			// accelerate or decelerate to target speed
 			if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
@@ -187,14 +187,14 @@ namespace BestGameEver.FirstPersonController
 			}
 
 			// normalise input direction
-			Vector3 inputDirection = new Vector3(StarterInputs.move.x, 0.0f, StarterInputs.move.y).normalized;
+			Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
 
 			// note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
 			// if there is a move input rotate player when the player is moving
-			if (StarterInputs.move != Vector2.zero)
+			if (_input.move != Vector2.zero)
 			{
 				// move
-				inputDirection = _playerTransform.right * StarterInputs.move.x + _playerTransform.forward * StarterInputs.move.y;
+				inputDirection = _playerTransform.right * _input.move.x + _playerTransform.forward * _input.move.y;
 			}
 
 			// move the player
@@ -215,7 +215,7 @@ namespace BestGameEver.FirstPersonController
 				}
 
 				// Jump
-				if (StarterInputs.jump && _jumpTimeoutDelta <= 0.0f)
+				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
 				{
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
@@ -239,7 +239,7 @@ namespace BestGameEver.FirstPersonController
 				}
 
 				// if we are not grounded, do not jump
-				StarterInputs.jump = false;
+				_input.jump = false;
 			}
 
 			// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)

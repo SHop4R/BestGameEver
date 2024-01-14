@@ -11,8 +11,6 @@ namespace BestGameEver.Inputs
         public Vector2 look;
         public bool jump;
         public bool sprint;
-        public bool fireLeft;
-        public bool fireRight;
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -47,16 +45,6 @@ namespace BestGameEver.Inputs
             sprint = newSprintState;
         }
         
-        private void FireLeftInput(bool newFireLeftState)
-        {
-            fireLeft = newFireLeftState;
-        }
-        
-        private void FireRightInput(bool newFireRightState)
-        {
-            fireRight = newFireRightState;
-        }
-
         private static void SetCursorState(bool newState)
         {
             Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
@@ -82,17 +70,6 @@ namespace BestGameEver.Inputs
         {
             SprintInput(value.isPressed);
         }
-        
-        public void OnFireLeft(InputValue value)
-        {
-            FireLeftInput(value.isPressed);
-        }
-        
-        public void OnFireRight(InputValue value)
-        {
-            FireRightInput(value.isPressed);
-        }
-        
 #endif
     }
 }

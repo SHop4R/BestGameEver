@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using BestGameEver.Core;
 using UnityEngine;
 
 namespace BestGameEver.Enemies
 {
-    public class CountEnemies : MonoBehaviour
+    internal sealed class CountEnemies : MonoSingleton<CountEnemies>
     {
         [SerializeField] private EnemyEvent enemyEvent;
         private readonly List<Enemy> _enemies = new();
 
         [SerializeField] private GameObject winScreen;
 
-        private void Awake()
+        protected override void Awake()
         {
             winScreen.SetActive(false);
         }
