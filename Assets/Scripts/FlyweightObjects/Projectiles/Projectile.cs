@@ -70,7 +70,7 @@ namespace BestGameEver.FlyweightObjects.Projectiles
         {
             FlyweightFactory.Instance.ReturnToPool(this);
             
-            switch (SettingsForProjectile.Type)
+            switch (SettingsForProjectile.ObjectType)
             {
                 case FlyweightObjectType.DamageProjectile:
                     enemy.TakeDamage(SettingsForProjectile.EffectAmount);

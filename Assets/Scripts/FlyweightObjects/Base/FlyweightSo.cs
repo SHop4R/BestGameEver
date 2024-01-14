@@ -4,7 +4,7 @@ namespace BestGameEver.FlyweightObjects.Base
 {
     public abstract class FlyweightSo : ScriptableObject
     {
-        [field: SerializeField] public FlyweightObjectType Type{ get; private set; }
+        [field: SerializeField] public FlyweightObjectType ObjectType{ get; private set; }
         [field: SerializeField] public GameObject Prefab{ get; private set; }
         
         public virtual Flyweight CreateProjectile()

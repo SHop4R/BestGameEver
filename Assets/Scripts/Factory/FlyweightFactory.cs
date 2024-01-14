@@ -19,7 +19,7 @@ namespace BestGameEver.Factory
             foreach (FlyweightSo so in flyweightObjects)
             {
                 FlyweightPoolTuple tuple = new(so, CreatePoolFor(so));
-                _flyweightPoolsDictionary.Add(so.Type, tuple);
+                _flyweightPoolsDictionary.Add(so.ObjectType, tuple);
             }
             
             flyweightObjects = null;
@@ -39,10 +39,10 @@ namespace BestGameEver.Factory
         
         private IObjectPool<Flyweight> GetPoolFor(FlyweightSo so)
         {
-            if (_flyweightPoolsDictionary.TryGetValue(so.Type, out FlyweightPoolTuple existingTuple)) return existingTuple.Pool;
+            if (_flyweightPoolsDictionary.TryGetValue(so.ObjectType, out FlyweightPoolTuple existingTuple)) return existingTuple.Pool;
 
             FlyweightPoolTuple createdTuple = new(so, CreatePoolFor(so));
-            _flyweightPoolsDictionary.Add(so.Type, createdTuple);
+            _flyweightPoolsDictionary.Add(so.ObjectType, createdTuple);
             return createdTuple.Pool;
         }
 
