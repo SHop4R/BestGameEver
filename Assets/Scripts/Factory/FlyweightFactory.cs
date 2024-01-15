@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using BestGameEver.Core;
 using BestGameEver.FlyweightObjects.Base;
+using BestGameEver.FlyweightObjects.Flyweights;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -9,25 +10,29 @@ namespace BestGameEver.Factory
     public class FlyweightFactory : MonoSingleton<FlyweightFactory>
     {
         [SerializeField] private FlyweightSo[] flyweightObjects;
-        
+        [SerializeField] private int defaultPoolSize;
+
         private readonly Dictionary<FlyweightObjectType, FlyweightPoolTuple> _flyweightPoolsDictionary = new();
 
-        protected override void Awake()
+        private void Start()
         {
-            base.Awake();
-            
             foreach (FlyweightSo so in flyweightObjects)
             {
                 FlyweightPoolTuple tuple = new(so, CreatePoolFor(so));
                 _flyweightPoolsDictionary.Add(so.ObjectType, tuple);
+                
+                for (var i = 0; i < defaultPoolSize; i++)
+                {
+                    tuple.Pool.Get();
+                }
             }
             
             flyweightObjects = null;
         }
-
+        
         public Flyweight Spawn(FlyweightObjectType type)
         {
-            FlyweightPoolTuple tuple = _flyweightPoolsDictionary.GetValueOrDefault(type);
+            FlyweightPoolTuple tuple = _flyweightPoolsDictionary[type];
             return tuple.Pool.Get();
         }
 
@@ -39,23 +44,24 @@ namespace BestGameEver.Factory
         
         private IObjectPool<Flyweight> GetPoolFor(FlyweightSo so)
         {
-            if (_flyweightPoolsDictionary.TryGetValue(so.ObjectType, out FlyweightPoolTuple existingTuple)) return existingTuple.Pool;
-
-            FlyweightPoolTuple createdTuple = new(so, CreatePoolFor(so));
-            _flyweightPoolsDictionary.Add(so.ObjectType, createdTuple);
-            return createdTuple.Pool;
+            if (_flyweightPoolsDictionary.TryGetValue(so.ObjectType, out FlyweightPoolTuple tuple)) return tuple.Pool;
+            
+            tuple = new(so, CreatePoolFor(so));
+            _flyweightPoolsDictionary.Add(so.ObjectType, tuple);
+            return tuple.Pool;
         }
 
-        private static IObjectPool<Flyweight> CreatePoolFor(FlyweightSo so)
+        private IObjectPool<Flyweight> CreatePoolFor(FlyweightSo so)
         {
-            return new ObjectPool<Flyweight>(
+            return new ObjectPool<Flyweight>
+            (
                 so.CreateProjectile,
                 FlyweightSo.OnGetProjectile,
                 FlyweightSo.OnReleaseProjectile,
                 FlyweightSo.DestroyProjectile,
                 true,
-                10,
-                100
+                defaultPoolSize,
+                10
             );
         }
     }

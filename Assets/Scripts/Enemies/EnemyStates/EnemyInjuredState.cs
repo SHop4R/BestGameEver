@@ -5,20 +5,20 @@ namespace BestGameEver.Enemies.EnemyStates
 {
     internal sealed class EnemyInjuredState : EnemyState
     {
-        public override void TakeDamage(Enemy enemy, float damage)
+        public override void TakeDamage(EnemyStateMachine enemy, float damage)
         {
             enemy.enemyEvent.RaiseEvent(enemy);
             Object.Destroy(enemy.gameObject);
         }
 
-        public override void Heal(Enemy enemy, float heal)
+        public override void Heal(EnemyStateMachine enemy, float heal)
         {
             Revive(enemy);
         }
 
-        public override void Patrol(Enemy enemy, Vector3 position) {}
+        public override void Patrol(EnemyStateMachine enemy, Vector3 position) {}
         
-        private static void Revive(Enemy enemy)
+        private static void Revive(EnemyStateMachine enemy)
         {
             enemy.injuredObject.SetActive(false);
             enemy.aliveObject.SetActive(true);

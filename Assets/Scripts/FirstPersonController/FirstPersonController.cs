@@ -96,7 +96,7 @@ namespace BestGameEver.FirstPersonController
 			}
 		}
 
-		private void Start()
+		protected virtual void Start()
 		{
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();

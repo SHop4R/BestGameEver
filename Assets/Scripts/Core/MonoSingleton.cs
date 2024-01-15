@@ -8,7 +8,7 @@ namespace BestGameEver.Core
 
         protected virtual void Awake()
         {
-            if (Instance is not null)
+            if (Instance != null)
             {
                 Destroy(gameObject);
                 return;

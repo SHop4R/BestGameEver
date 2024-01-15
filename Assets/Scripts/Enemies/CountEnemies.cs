@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using BestGameEver.Core;
+using BestGameEver.Enemies.Base;
+using BestGameEver.Enemies.Events;
 using UnityEngine;
 
 namespace BestGameEver.Enemies
@@ -7,7 +9,7 @@ namespace BestGameEver.Enemies
     internal sealed class CountEnemies : MonoSingleton<CountEnemies>
     {
         [SerializeField] private EnemyEvent enemyEvent;
-        private readonly List<Enemy> _enemies = new();
+        private readonly List<EnemyStateMachine> _enemies = new();
 
         [SerializeField] private GameObject winScreen;
 
@@ -18,7 +20,7 @@ namespace BestGameEver.Enemies
 
         private void Start()
         {
-            _enemies.AddRange(FindObjectsOfType<Enemy>());
+            _enemies.AddRange(FindObjectsOfType<EnemyStateMachine>());
         }
 
         private void OnEnable()
@@ -31,7 +33,7 @@ namespace BestGameEver.Enemies
             enemyEvent.Unsubscribe(OnEnemyDeath);
         }
         
-        private void OnEnemyDeath(Enemy enemy)
+        private void OnEnemyDeath(EnemyStateMachine enemy)
         {
             _enemies.Remove(enemy);
             

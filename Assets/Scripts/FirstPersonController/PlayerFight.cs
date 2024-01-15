@@ -1,5 +1,6 @@
 ﻿using BestGameEver.Factory;
 using BestGameEver.FlyweightObjects.Base;
+using BestGameEver.FlyweightObjects.Flyweights;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,23 +15,23 @@ namespace BestGameEver.FirstPersonController
 
         public void OnFireLeft(InputValue value)
         {
-            SpawnProjectile(FlyweightObjectType.DamageProjectile);
+            Shoot(FlyweightObjectType.DamageProjectile);
         }
         
         public void OnFireRight(InputValue value)
         {
-            SpawnProjectile(FlyweightObjectType.HealProjectile);
+            Shoot(FlyweightObjectType.HealProjectile);
         }
         
-        private void SpawnProjectile(FlyweightObjectType type)
+        private void Shoot(FlyweightObjectType type)
         {
             if (Time.time - _lastFireRate < fireRate) return;
             
             Flyweight obj = FlyweightFactory.Instance.Spawn(type);
-            if (!obj.TryGetComponent(out Transform objectTransform)) return;
             
-            objectTransform.position = cinemachineCameraTarget.position;
-            objectTransform.rotation = cinemachineCameraTarget.rotation;
+            Transform objTransform = obj.transform;
+            objTransform.position = cinemachineCameraTarget.position;
+            objTransform.rotation = cinemachineCameraTarget.rotation;
             
             _lastFireRate = Time.time;
         }

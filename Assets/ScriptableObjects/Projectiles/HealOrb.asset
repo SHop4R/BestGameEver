@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594d02ef92404d2789be5552a837462c, type: 3}
   m_Name: HealOrb
   m_EditorClassIdentifier: 
-  <Type>k__BackingField: 1
+  <ObjectType>k__BackingField: 1
   <Prefab>k__BackingField: {fileID: 1870416265034142936, guid: 132cd11c00eca6542a40647d5bc49aac, type: 3}
   <Speed>k__BackingField: 10
   <EffectAmount>k__BackingField: 10

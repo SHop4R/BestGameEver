@@ -1,4 +1,4 @@
-﻿using BestGameEver.FlyweightObjects.Base;
+﻿using BestGameEver.FlyweightObjects.Flyweights;
 using UnityEngine.Pool;
 
 namespace BestGameEver.Factory

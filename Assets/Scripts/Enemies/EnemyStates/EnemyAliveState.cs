@@ -5,7 +5,7 @@ namespace BestGameEver.Enemies.EnemyStates
 {
     internal sealed class EnemyAliveState : EnemyState
     {
-        public override void TakeDamage(Enemy enemy, float damage)
+        public override void TakeDamage(EnemyStateMachine enemy, float damage)
         {
             enemy.health -= damage;
             
@@ -15,7 +15,7 @@ namespace BestGameEver.Enemies.EnemyStates
             }
         }
 
-        public override void Heal(Enemy enemy, float heal)
+        public override void Heal(EnemyStateMachine enemy, float heal)
         {
             if (enemy.health >= 100) return;
             
@@ -23,17 +23,17 @@ namespace BestGameEver.Enemies.EnemyStates
             enemy.health = Mathf.Clamp(enemy.health, 0, 100);
         }
 
-        public override void Patrol(Enemy enemy, Vector3 position)
+        public override void Patrol(EnemyStateMachine enemy, Vector3 position)
         {
             if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)
             {
-                enemy.Destination = Enemy.RandomNavMeshPosition(position, enemy.patrolRadius);
+                enemy.Destination = EnemyStateMachine.RandomNavMeshPosition(position, enemy.patrolRadius);
             }
             
             enemy.Agent.SetDestination(enemy.Destination);
         }
 
-        private static void Injure(Enemy enemy)
+        private static void Injure(EnemyStateMachine enemy)
         {
             enemy.aliveObject.SetActive(false);
             enemy.injuredObject.SetActive(true);

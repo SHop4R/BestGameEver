@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BestGameEver.FlyweightObjects.Base
+namespace BestGameEver.FlyweightObjects.Flyweights
 {
     [DisallowMultipleComponent]
     public abstract class Flyweight : MonoBehaviour

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace BestGameEver.FlyweightObjects.Projectiles
+namespace BestGameEver.FlyweightObjects.Base
 {
     internal static class WaitForSecondsHelper
     {

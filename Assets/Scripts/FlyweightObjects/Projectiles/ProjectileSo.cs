@@ -1,4 +1,4 @@
-﻿using BestGameEver.FlyweightObjects.Base;
+﻿using BestGameEver.FlyweightObjects.Flyweights;
 using UnityEngine;
 
 namespace BestGameEver.FlyweightObjects.Projectiles
@@ -9,16 +9,5 @@ namespace BestGameEver.FlyweightObjects.Projectiles
         [field: SerializeField] public float Speed{ get; private set; }
         [field: SerializeField] public int EffectAmount{ get; private set; }
         [field: SerializeField] public float Lifetime{ get; private set; }
-
-        public override Flyweight CreateProjectile()
-        {
-            GameObject obj = Instantiate(Prefab);
-            obj.SetActive(false);
-            
-            var projectile = obj.GetComponent<Projectile>();
-            projectile.settings = this;
-            
-            return projectile;
-        }
     }
 }

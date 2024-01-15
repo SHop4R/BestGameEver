@@ -1,21 +1,22 @@
-﻿using UnityEngine;
+﻿using BestGameEver.FlyweightObjects.Base;
+using UnityEngine;
 
-namespace BestGameEver.FlyweightObjects.Base
+namespace BestGameEver.FlyweightObjects.Flyweights
 {
     public abstract class FlyweightSo : ScriptableObject
     {
         [field: SerializeField] public FlyweightObjectType ObjectType{ get; private set; }
         [field: SerializeField] public GameObject Prefab{ get; private set; }
         
-        public virtual Flyweight CreateProjectile()
+        public Flyweight CreateProjectile()
         {
             GameObject obj = Instantiate(Prefab);
             obj.SetActive(false);
 
-            obj.TryGetComponent(out Flyweight flyweight);
-            flyweight.settings = this;
+            obj.TryGetComponent(out Flyweight component);
+            component.settings = this;
             
-            return flyweight;
+            return component;
         }
         
         public static void OnGetProjectile(Flyweight projectile) => projectile.gameObject.SetActive(true);
