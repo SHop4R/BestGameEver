@@ -7,14 +7,13 @@ namespace BestGameEver.Enemies
 {
     public sealed class EnemyUI : EnemyStateMachine
     {
-        private Transform _playerTransform;
-        
         [Header("UI")]
         [SerializeField] private Slider healthBar;
         [SerializeField] private Vector3 aliveHealthBarOffset;
         [SerializeField] private Vector3 injuredHealthBarOffset;
         
-        private EnemyState _lastEnemyState;
+        private IEnemyState _lastEnemyState;
+        private Transform _playerTransform;
 
         protected override void Awake()
         {

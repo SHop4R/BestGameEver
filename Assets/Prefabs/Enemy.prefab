@@ -548,10 +548,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  aliveObject: {fileID: 2507672745677095171}
-  injuredObject: {fileID: 1960067022302368671}
-  patrolRadius: 20
+  <AliveObject>k__BackingField: {fileID: 2507672745677095171}
+  <InjuredObject>k__BackingField: {fileID: 1960067022302368671}
   enemyEvent: {fileID: 11400000, guid: 1f20b4c20689fb744825fa4d2ebc917b, type: 2}
+  <PatrolRadius>k__BackingField: 10
+  patrolRepeatTime: 3
   healthBar: {fileID: 2139774995863663375}
   aliveHealthBarOffset: {x: 0, y: 1.3, z: 0}
   injuredHealthBarOffset: {x: 0, y: 0.3, z: 0}
