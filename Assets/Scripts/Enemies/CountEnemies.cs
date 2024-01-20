@@ -35,6 +35,8 @@ namespace BestGameEver.Enemies
         
         private void OnEnemyDeath(EnemyStateMachine enemy)
         {
+            if (enemy == null) return;
+            
             _enemies.Remove(enemy);
             
             if (_enemies.Count == 0)
