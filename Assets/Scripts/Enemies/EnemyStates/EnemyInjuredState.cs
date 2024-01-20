@@ -3,30 +3,30 @@ using UnityEngine;
 
 namespace BestGameEver.Enemies.EnemyStates
 {
-    internal sealed class EnemyInjuredState : EnemyState
+    internal sealed class EnemyInjuredState : IEnemyState
     {
-        public override void TakeDamage(EnemyStateMachine enemy, float damage)
+        public void TakeDamage(EnemyStateMachine enemy, float damage)
         {
             enemy.enemyEvent.RaiseEvent(enemy);
             Object.Destroy(enemy.gameObject);
         }
 
-        public override void Heal(EnemyStateMachine enemy, float heal)
+        public void Heal(EnemyStateMachine enemy, float heal)
         {
             Revive(enemy);
         }
 
-        public override void Patrol(EnemyStateMachine enemy, Vector3 position) {}
+        public void Patrol(EnemyStateMachine enemy, Vector3 position) {}
         
         private static void Revive(EnemyStateMachine enemy)
         {
-            enemy.injuredObject.SetActive(false);
-            enemy.aliveObject.SetActive(true);
+            enemy.InjuredObject.SetActive(false);
+            enemy.AliveObject.SetActive(true);
             
             enemy.Agent.isStopped = false;
             enemy.health = 10;
             
-            ChangeState(enemy, StateOfEnemy.Alive);
+            EnemyStateMachine.ChangeState(enemy, StateOfEnemy.Alive);
 
             enemy.EnemyCollider.sharedMesh = enemy.AliveMesh;
         }

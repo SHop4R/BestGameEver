@@ -7,19 +7,19 @@ namespace BestGameEver.Enemies.Events
     [CreateAssetMenu(fileName = "new EnemyEvent", menuName = "Events/EnemyEvent", order = 1)]
     public sealed class EnemyEvent : ScriptableObject
     {
-        private UnityEvent<EnemyStateMachine> _onEvent;
+        private UnityEvent<EnemyBehaviour> _onEvent;
         
-        public void RaiseEvent(EnemyStateMachine enemy)
+        public void RaiseEvent(EnemyBehaviour enemy)
         {
             _onEvent?.Invoke(enemy);
         }
         
-        public void Subscribe(UnityAction<EnemyStateMachine> listener)
+        public void Subscribe(UnityAction<EnemyBehaviour> listener)
         {
             _onEvent.AddListener(listener);
         }
         
-        public void Unsubscribe(UnityAction<EnemyStateMachine> listener)
+        public void Unsubscribe(UnityAction<EnemyBehaviour> listener)
         {
             _onEvent.RemoveListener(listener);
         }

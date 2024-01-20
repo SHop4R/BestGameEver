@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BestGameEver.Core;
 using BestGameEver.FlyweightObjects.Base;
 using BestGameEver.FlyweightObjects.Flyweights;
@@ -16,17 +17,7 @@ namespace BestGameEver.Factory
 
         private void Start()
         {
-            foreach (FlyweightSo so in flyweightObjects)
-            {
-                FlyweightPoolTuple tuple = new(so, CreatePoolFor(so));
-                _flyweightPoolsDictionary.Add(so.ObjectType, tuple);
-                
-                for (var i = 0; i < defaultPoolSize; i++)
-                {
-                    tuple.Pool.Get();
-                }
-            }
-            
+            PreGenerateObjects(flyweightObjects);
             flyweightObjects = null;
         }
         
@@ -63,6 +54,20 @@ namespace BestGameEver.Factory
                 defaultPoolSize,
                 10
             );
+
+        }
+        private void PreGenerateObjects(Span<FlyweightSo> flyweights)
+        {
+            foreach (FlyweightSo so in flyweights)
+            {
+                FlyweightPoolTuple tuple = new(so, CreatePoolFor(so));
+                _flyweightPoolsDictionary.Add(so.ObjectType, tuple);
+            
+                for (int i = 0; i < defaultPoolSize; i++)
+                {
+                    tuple.Pool.Get();
+                }
+            }
         }
     }
 }

@@ -5,11 +5,11 @@ namespace BestGameEver.Enemies.Base
 {
     internal static class StateHelper
     {
-        private static readonly Dictionary<StateOfEnemy, EnemyState> Storage = new();
+        private static readonly Dictionary<StateOfEnemy, IEnemyState> Storage = new();
         
-        internal static EnemyState GetEnemyState(StateOfEnemy state)
+        internal static IEnemyState GetEnemyState(StateOfEnemy state)
         {
-            if (Storage.TryGetValue(state, out EnemyState enemyState)) return enemyState;
+            if (Storage.TryGetValue(state, out IEnemyState enemyState)) return enemyState;
 
             enemyState = state switch
             {

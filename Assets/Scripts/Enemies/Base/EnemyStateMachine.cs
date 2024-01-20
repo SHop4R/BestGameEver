@@ -1,55 +1,28 @@
-﻿using BestGameEver.Enemies.Events;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 namespace BestGameEver.Enemies.Base
 {
-    [RequireComponent(typeof(NavMeshAgent)), DisallowMultipleComponent, SelectionBase]
-    public class EnemyStateMachine : MonoBehaviour
+    public class EnemyStateMachine : EnemyBehaviour
     {
-        internal EnemyState CurrentState;
-        internal NavMeshAgent Agent;
-        internal MeshCollider EnemyCollider;
+        [field: Header("Patrol Settings")]
+        [field: SerializeField] internal float PatrolRadius{get; private set;}
+        [SerializeField] private float patrolRepeatTime;
         
-        [Header("Enemy Settings")]
-        [SerializeField] internal float health;
-        [SerializeField] internal GameObject aliveObject;
-        [SerializeField] internal GameObject injuredObject;
         
-        [Header("Patrol Settings")]
-        [SerializeField] internal float patrolRadius;
-
-        [Header("Events")]
-        [SerializeField] internal EnemyEvent enemyEvent;
-        
-        internal Mesh AliveMesh;
-        internal Mesh InjuredMesh;
-        
+        internal IEnemyState CurrentState;
         internal Vector3 Destination;
-
-        private Transform _enemyTransform;
         
-        protected virtual void Awake()
+        protected override void Awake()
         {
-            Agent = GetComponent<NavMeshAgent>();
-            EnemyCollider = GetComponent<MeshCollider>();
-            
-            AliveMesh = aliveObject.GetComponent<MeshFilter>().sharedMesh;
-            aliveObject.SetActive(true);
-            
-            InjuredMesh = injuredObject.GetComponent<MeshFilter>().sharedMesh;
-            injuredObject.SetActive(false);
-            
+            base.Awake();
             CurrentState = StateHelper.GetEnemyState(StateOfEnemy.Alive);
-            
-            EnemyCollider.sharedMesh = AliveMesh;
-            
-            _enemyTransform = transform;
         }
         
         protected virtual void Start()
         {
-            InvokeRepeating(nameof(Patrol), 0f, 3f);
+            float randomTime = Random.Range(0f, patrolRepeatTime);
+            InvokeRepeating(nameof(Patrol), randomTime, patrolRepeatTime);
         }
         
         public virtual void TakeDamage(float damage)
@@ -64,7 +37,12 @@ namespace BestGameEver.Enemies.Base
 
         private void Patrol()
         {
-            CurrentState.Patrol(this, _enemyTransform.position);
+            CurrentState.Patrol(this, EnemyTransform.position);
+        }
+        
+        internal static void ChangeState(EnemyStateMachine enemy ,StateOfEnemy state)
+        {
+            enemy.CurrentState = StateHelper.GetEnemyState(state);
         }
         
         internal static Vector3 RandomNavMeshPosition(Vector3 position, float distance)

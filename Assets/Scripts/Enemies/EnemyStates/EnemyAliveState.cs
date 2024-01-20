@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace BestGameEver.Enemies.EnemyStates
 {
-    internal sealed class EnemyAliveState : EnemyState
+    internal sealed class EnemyAliveState : IEnemyState
     {
-        public override void TakeDamage(EnemyStateMachine enemy, float damage)
+        public void TakeDamage(EnemyStateMachine enemy, float damage)
         {
             enemy.health -= damage;
             
@@ -15,7 +15,7 @@ namespace BestGameEver.Enemies.EnemyStates
             }
         }
 
-        public override void Heal(EnemyStateMachine enemy, float heal)
+        public void Heal(EnemyStateMachine enemy, float heal)
         {
             if (enemy.health >= 100) return;
             
@@ -23,11 +23,11 @@ namespace BestGameEver.Enemies.EnemyStates
             enemy.health = Mathf.Clamp(enemy.health, 0, 100);
         }
 
-        public override void Patrol(EnemyStateMachine enemy, Vector3 position)
+        public void Patrol(EnemyStateMachine enemy, Vector3 position)
         {
             if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)
             {
-                enemy.Destination = EnemyStateMachine.RandomNavMeshPosition(position, enemy.patrolRadius);
+                enemy.Destination = EnemyStateMachine.RandomNavMeshPosition(position, enemy.PatrolRadius);
             }
             
             enemy.Agent.SetDestination(enemy.Destination);
@@ -35,12 +35,12 @@ namespace BestGameEver.Enemies.EnemyStates
 
         private static void Injure(EnemyStateMachine enemy)
         {
-            enemy.aliveObject.SetActive(false);
-            enemy.injuredObject.SetActive(true);
+            enemy.AliveObject.SetActive(false);
+            enemy.InjuredObject.SetActive(true);
             
             enemy.Agent.isStopped = true;
             
-            ChangeState(enemy, StateOfEnemy.Injured);
+            EnemyStateMachine.ChangeState(enemy, StateOfEnemy.Injured);
 
             enemy.EnemyCollider.sharedMesh = enemy.InjuredMesh;
         }

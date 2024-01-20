@@ -9,7 +9,7 @@ namespace BestGameEver.Enemies
     internal sealed class CountEnemies : MonoSingleton<CountEnemies>
     {
         [SerializeField] private EnemyEvent enemyEvent;
-        private readonly List<EnemyStateMachine> _enemies = new();
+        private readonly List<EnemyBehaviour> _enemies = new();
 
         [SerializeField] private GameObject winScreen;
 
@@ -20,7 +20,7 @@ namespace BestGameEver.Enemies
 
         private void Start()
         {
-            _enemies.AddRange(FindObjectsOfType<EnemyStateMachine>());
+            _enemies.AddRange(FindObjectsOfType<EnemyBehaviour>());
         }
 
         private void OnEnable()
@@ -33,7 +33,7 @@ namespace BestGameEver.Enemies
             enemyEvent.Unsubscribe(OnEnemyDeath);
         }
         
-        private void OnEnemyDeath(EnemyStateMachine enemy)
+        private void OnEnemyDeath(EnemyBehaviour enemy)
         {
             if (enemy == null) return;
             
